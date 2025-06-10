@@ -1,0 +1,13 @@
+.chat-container {
+    height: 400px;
+    overflow-y: scroll;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #fafafa;
+}
+.chat-item {
+    margin-bottom: 8px;
+    padding: 4px;
+    border-radius: 4px;
+    background-color: #e6f3ff;
+}
