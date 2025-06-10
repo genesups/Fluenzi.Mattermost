@@ -1,0 +1,16 @@
+@using Mattermost.XafBlazorPrototype
+@inject ChatMessageService ChatService
+@using DevExpress.ExpressApp.Blazor.Components
+@using DevExpress.Xpo
+
+<div class="chat-container">
+    <DxListView Data="ChatMessages" ItemTemplate="ChatTemplate" />
+</div>
+
+@code {
+    IEnumerable<ChatMessage> ChatMessages => new XPCollection<ChatMessage>(ChatService.DataStore);
+
+    RenderFragment<ChatMessage> ChatTemplate => message => @<div class="chat-item">
+        <strong>@message.User:</strong> @message.Text
+    </div>;
+}
