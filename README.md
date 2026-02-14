@@ -8,7 +8,8 @@
 
 <a id="readme-top"></a>
 
-# Mattermost.NET
+# Fluenzi.Mattermost (based from `Mattermost.NET`)
+(This document will be updated soon...)
 
 Ready-to-use **.NET Standard** library for convenient development of Mattermost bots.
 
