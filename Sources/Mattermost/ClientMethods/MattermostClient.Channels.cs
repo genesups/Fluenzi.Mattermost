@@ -1,6 +1,7 @@
-﻿using System;
-using System.Text;
+using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using Mattermost.Enums;
 using Mattermost.Constants;
@@ -21,6 +22,36 @@ namespace Mattermost
         {
             CheckDisposed();
             return SendRequestAsync<Channel>(HttpMethod.Get, Routes.Channels + "/" + channelId);
+        }
+
+        /// <summary>
+        /// Get channels for a team.
+        /// </summary>
+        /// <param name="teamId"> Team identifier. </param>
+        /// <param name="page"> Page number (0-based). </param>
+        /// <param name="perPage"> Number of channels per page. </param>
+        /// <returns> List of channels in the team. </returns>
+        public Task<IReadOnlyList<Channel>> GetChannelsForTeamAsync(string teamId, int page = 0, int perPage = 200)
+        {
+            CheckDisposed();
+            if (string.IsNullOrWhiteSpace(teamId))
+                throw new ArgumentException("Team ID cannot be null or empty.", nameof(teamId));
+            string url = Routes.Teams + "/" + Uri.EscapeDataString(teamId) + "/channels?page=" + page + "&per_page=" + perPage;
+            return SendRequestAsync<IReadOnlyList<Channel>>(HttpMethod.Get, url);
+        }
+
+        /// <summary>
+        /// Get channel members for a channel.
+        /// </summary>
+        /// <param name="channelId"> Channel identifier. </param>
+        /// <returns> List of channel member info (user ids and metadata). </returns>
+        public Task<IReadOnlyList<ChannelUserInfo>> GetChannelMembersAsync(string channelId)
+        {
+            CheckDisposed();
+            if (string.IsNullOrWhiteSpace(channelId))
+                throw new ArgumentException("Channel ID cannot be null or empty.", nameof(channelId));
+            string url = Routes.Channels + "/" + channelId + "/members";
+            return SendRequestAsync<IReadOnlyList<ChannelUserInfo>>(HttpMethod.Get, url);
         }
 
         /// <summary>

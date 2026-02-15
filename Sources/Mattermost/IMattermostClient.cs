@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Mattermost.Enums;
 using System.Threading;
@@ -12,6 +12,7 @@ using Mattermost.Models.Users;
 using System.Collections.Generic;
 using Mattermost.Models.Channels;
 using Mattermost.Models.Responses;
+using Mattermost.Models.Teams;
 
 namespace Mattermost
 {
@@ -166,6 +167,22 @@ namespace Mattermost
         Task<Channel> GetChannelAsync(string channelId);
 
         /// <summary>
+        /// Get channels for a team.
+        /// </summary>
+        /// <param name="teamId"> Team identifier. </param>
+        /// <param name="page"> Page number (0-based). </param>
+        /// <param name="perPage"> Number of channels per page. </param>
+        /// <returns> List of channels in the team. </returns>
+        Task<IReadOnlyList<Channel>> GetChannelsForTeamAsync(string teamId, int page = 0, int perPage = 200);
+
+        /// <summary>
+        /// Get channel members for a channel.
+        /// </summary>
+        /// <param name="channelId"> Channel identifier. </param>
+        /// <returns> List of channel member info. </returns>
+        Task<IReadOnlyList<ChannelUserInfo>> GetChannelMembersAsync(string channelId);
+
+        /// <summary>
         /// Create simple channel with specified users.
         /// </summary>
         /// <param name="teamId"> Team identifier. </param>
@@ -311,6 +328,32 @@ namespace Mattermost
         /// <param name="email"> Email address. </param>
         /// <returns> User information. </returns>
         Task<User> GetUserByEmailAsync(string email);
+
+        /// <summary>
+        /// Get presence/status for multiple users by ID.
+        /// </summary>
+        /// <param name="userIds"> User identifiers. </param>
+        /// <returns> List of user status info (user_id, status). </returns>
+        Task<IReadOnlyList<UserStatusInfo>> GetUsersStatusByIdsAsync(IReadOnlyList<string> userIds);
+
+        #endregion
+
+        #region Teams
+
+        /// <summary>
+        /// Get team by specified identifier.
+        /// </summary>
+        /// <param name="teamId"> Team identifier. </param>
+        /// <returns> Team information. </returns>
+        Task<Team> GetTeamAsync(string teamId);
+
+        /// <summary>
+        /// Get teams for the current user.
+        /// </summary>
+        /// <param name="page"> Page number (0-based). </param>
+        /// <param name="perPage"> Number of teams per page. </param>
+        /// <returns> List of teams the user is a member of. </returns>
+        Task<IReadOnlyList<Team>> GetMyTeamsAsync(int page = 0, int perPage = 60);
 
         #endregion
 

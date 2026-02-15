@@ -1,9 +1,10 @@
-﻿using System.Net.Http;
-using System.Text.Json;
-using Mattermost.Constants;
-using System.Threading.Tasks;
-using Mattermost.Models.Users;
 using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Mattermost.Constants;
+using Mattermost.Models.Users;
 
 namespace Mattermost
 {
@@ -61,6 +62,20 @@ namespace Mattermost
             CheckDisposed();
             string url = Routes.Users + "/email/" + email.Trim();
             return SendRequestAsync<User>(HttpMethod.Get, url);
+        }
+
+        /// <summary>
+        /// Get presence/status for multiple users by ID.
+        /// </summary>
+        /// <param name="userIds"> User identifiers. </param>
+        /// <returns> List of user status info (user_id, status). </returns>
+        public Task<IReadOnlyList<UserStatusInfo>> GetUsersStatusByIdsAsync(IReadOnlyList<string> userIds)
+        {
+            CheckDisposed();
+            if (userIds == null || userIds.Count == 0)
+                return Task.FromResult<IReadOnlyList<UserStatusInfo>>(Array.Empty<UserStatusInfo>());
+            string url = Routes.Users + "/status/ids";
+            return SendRequestAsync<IReadOnlyList<UserStatusInfo>>(HttpMethod.Post, url, userIds);
         }
     }
 }
