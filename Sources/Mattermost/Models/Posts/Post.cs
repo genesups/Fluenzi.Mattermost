@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -104,7 +104,7 @@ namespace Mattermost.Models.Posts
         /// The time in milliseconds when post was replied.
         /// </summary>
         [JsonPropertyName("last_reply_at")]
-        public int LastReplyAt { get; set; }
+        public long LastReplyAt { get; set; }
 
         /// <summary>
         /// Files attached to the post.

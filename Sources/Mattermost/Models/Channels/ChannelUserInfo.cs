@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Mattermost.Models.Channels
 {
@@ -29,7 +29,7 @@ namespace Mattermost.Models.Channels
         /// The time in milliseconds the channel was last viewed by the user.
         /// </summary>
         [JsonPropertyName("last_viewed_at")]
-        public int LastViewedAt { get; set; }
+        public long LastViewedAt { get; set; }
 
         /// <summary>
         /// How many messages are posted in the channel by user.

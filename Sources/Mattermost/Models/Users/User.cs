@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 
 namespace Mattermost.Models.Users
@@ -43,10 +43,10 @@ namespace Mattermost.Models.Users
             .UtcDateTime;
 
         /// <summary>
-        /// The time in milliseconds a user was deleted.
+        /// The time in milliseconds a user was deleted (0 if not deleted).
         /// </summary>
         [JsonPropertyName("delete_at")]
-        public int DeletedAtUnixTimestamp { get; set; }
+        public long DeletedAtUnixTimestamp { get; set; }
 
         /// <summary>
         /// The <see cref="DateTime"/> a user was deleted in UTC format.
