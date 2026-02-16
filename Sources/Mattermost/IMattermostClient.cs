@@ -167,13 +167,22 @@ namespace Mattermost
         Task<Channel> GetChannelAsync(string channelId);
 
         /// <summary>
-        /// Get channels for a team.
+        /// Get public channels for a team.
         /// </summary>
         /// <param name="teamId"> Team identifier. </param>
         /// <param name="page"> Page number (0-based). </param>
         /// <param name="perPage"> Number of channels per page. </param>
         /// <returns> List of channels in the team. </returns>
         Task<IReadOnlyList<Channel>> GetChannelsForTeamAsync(string teamId, int page = 0, int perPage = 200);
+
+        /// <summary>
+        /// Get private channels for a team. Requires manage_system (e.g. system admin); regular users get 403.
+        /// </summary>
+        /// <param name="teamId"> Team identifier. </param>
+        /// <param name="page"> Page number (0-based). </param>
+        /// <param name="perPage"> Number of channels per page. </param>
+        /// <returns> List of private channels in the team. </returns>
+        Task<IReadOnlyList<Channel>> GetPrivateChannelsForTeamAsync(string teamId, int page = 0, int perPage = 200);
 
         /// <summary>
         /// Get channel members for a channel.
@@ -335,6 +344,11 @@ namespace Mattermost
         /// <param name="userIds"> User identifiers. </param>
         /// <returns> List of user status info (user_id, status). </returns>
         Task<IReadOnlyList<UserStatusInfo>> GetUsersStatusByIdsAsync(IReadOnlyList<string> userIds);
+
+        /// <summary>
+        /// Get the profile image for a user. Returns null if not found or on error.
+        /// </summary>
+        Task<byte[]?> GetUserImageAsync(string userId, CancellationToken cancellationToken = default);
 
         #endregion
 

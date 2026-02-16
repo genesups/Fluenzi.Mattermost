@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Mattermost.Constants;
 using Mattermost.Models.Users;
@@ -76,6 +77,32 @@ namespace Mattermost
                 return Task.FromResult<IReadOnlyList<UserStatusInfo>>(Array.Empty<UserStatusInfo>());
             string url = Routes.Users + "/status/ids";
             return SendRequestAsync<IReadOnlyList<UserStatusInfo>>(HttpMethod.Post, url, userIds);
+        }
+
+        /// <summary>
+        /// Get the profile image for a user (PNG/JPEG bytes). Returns null if not found or on error.
+        /// </summary>
+        /// <param name="userId">User identifier.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Image bytes or null.</returns>
+        public async Task<byte[]?> GetUserImageAsync(string userId, CancellationToken cancellationToken = default)
+        {
+            CheckDisposed();
+            if (string.IsNullOrEmpty(userId))
+                return null;
+            await CheckAuthorizedAsync();
+            string url = Routes.Users + "/" + userId + "/image";
+            try
+            {
+                var response = await _http.GetAsync(url, cancellationToken);
+                if (!response.IsSuccessStatusCode)
+                    return null;
+                return await response.Content.ReadAsByteArrayAsync();
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

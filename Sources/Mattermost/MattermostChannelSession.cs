@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Mattermost.Events;
 using Mattermost.Models.Channels;
+using Mattermost.Models;
 using Mattermost.Models.Posts;
 using Mattermost.Models.Responses;
 using Mattermost.Models.Users;
@@ -104,6 +105,7 @@ namespace Mattermost
             if (userIds.Count == 0)
                 return Array.Empty<ChannelMemberWithStatus>();
 
+            var rolesByUserId = members.ToDictionary(m => m.UserId, m => m.Roles ?? string.Empty, StringComparer.Ordinal);
             var userTasks = userIds.Select(id => _client.GetUserAsync(id));
             var users = await Task.WhenAll(userTasks);
             var statusList = await _client.GetUsersStatusByIdsAsync(userIds);
@@ -114,9 +116,47 @@ namespace Mattermost
                 {
                     UserId = u.Id,
                     DisplayName = string.IsNullOrEmpty(u.Nickname) ? (u.Username ?? u.Id) : u.Nickname,
+                    FullName = string.Join(" ", new[] { u.FirstName, u.LastName }.Where(s => !string.IsNullOrWhiteSpace(s)).ToList()).Trim(),
+                    Email = u.Email ?? string.Empty,
+                    Roles = rolesByUserId.TryGetValue(u.Id, out var roles) ? roles : string.Empty,
                     Status = statusMap.TryGetValue(u.Id, out var status) ? status : "offline"
                 })
                 .ToList();
+        }
+
+        public Task<byte[]?> GetUserImageAsync(string userId, CancellationToken cancellationToken = default)
+        {
+            if (_client == null)
+                return Task.FromResult<byte[]?>(null);
+            return _client.GetUserImageAsync(userId, cancellationToken);
+        }
+
+        public async Task<byte[]?> GetFileAsync(string fileId, CancellationToken cancellationToken = default)
+        {
+            if (_client == null)
+                return null;
+            try
+            {
+                return await _client.GetFileAsync(fileId).ConfigureAwait(false);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<FileDetails?> GetFileDetailsAsync(string fileId, CancellationToken cancellationToken = default)
+        {
+            if (_client == null)
+                return null;
+            try
+            {
+                return await _client.GetFileDetailsAsync(fileId).ConfigureAwait(false);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private void OnClientMessageReceived(object? sender, MessageEventArgs e)

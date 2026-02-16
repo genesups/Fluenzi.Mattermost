@@ -25,18 +25,35 @@ namespace Mattermost
         }
 
         /// <summary>
-        /// Get channels for a team.
+        /// Get public channels for a team.
         /// </summary>
         /// <param name="teamId"> Team identifier. </param>
         /// <param name="page"> Page number (0-based). </param>
         /// <param name="perPage"> Number of channels per page. </param>
-        /// <returns> List of channels in the team. </returns>
+        /// <returns> List of public channels in the team. </returns>
         public Task<IReadOnlyList<Channel>> GetChannelsForTeamAsync(string teamId, int page = 0, int perPage = 200)
         {
             CheckDisposed();
             if (string.IsNullOrWhiteSpace(teamId))
                 throw new ArgumentException("Team ID cannot be null or empty.", nameof(teamId));
             string url = Routes.Teams + "/" + Uri.EscapeDataString(teamId) + "/channels?page=" + page + "&per_page=" + perPage;
+            return SendRequestAsync<IReadOnlyList<Channel>>(HttpMethod.Get, url);
+        }
+
+        /// <summary>
+        /// Get private channels for a team. Requires manage_system permission (e.g. system admin).
+        /// For regular users this request typically returns 403 Forbidden.
+        /// </summary>
+        /// <param name="teamId"> Team identifier. </param>
+        /// <param name="page"> Page number (0-based). </param>
+        /// <param name="perPage"> Number of channels per page. </param>
+        /// <returns> List of private channels in the team. </returns>
+        public Task<IReadOnlyList<Channel>> GetPrivateChannelsForTeamAsync(string teamId, int page = 0, int perPage = 200)
+        {
+            CheckDisposed();
+            if (string.IsNullOrWhiteSpace(teamId))
+                throw new ArgumentException("Team ID cannot be null or empty.", nameof(teamId));
+            string url = Routes.Teams + "/" + Uri.EscapeDataString(teamId) + "/channels/private?page=" + page + "&per_page=" + perPage;
             return SendRequestAsync<IReadOnlyList<Channel>>(HttpMethod.Get, url);
         }
 

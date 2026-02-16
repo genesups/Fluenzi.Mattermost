@@ -45,5 +45,14 @@ namespace Mattermost
 
         /// <summary>Get channel members with display names and current presence status.</summary>
         Task<IReadOnlyList<ChannelMemberWithStatus>> GetChannelMembersWithStatusAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>Get the profile image for a user (bytes). Returns null if not found or on error.</summary>
+        Task<byte[]?> GetUserImageAsync(string userId, CancellationToken cancellationToken = default);
+
+        /// <summary>Get file bytes by identifier (e.g. post attachment).</summary>
+        Task<byte[]?> GetFileAsync(string fileId, CancellationToken cancellationToken = default);
+
+        /// <summary>Get file metadata by identifier.</summary>
+        Task<Mattermost.Models.FileDetails?> GetFileDetailsAsync(string fileId, CancellationToken cancellationToken = default);
     }
 }
