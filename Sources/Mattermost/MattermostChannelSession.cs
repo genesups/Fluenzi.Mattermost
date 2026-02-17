@@ -26,6 +26,7 @@ namespace Mattermost
 
         public string ChannelId { get; }
         public string ChannelDisplayName { get; private set; } = string.Empty;
+        public string? TeamId { get; private set; }
         public bool IsConnected => _client?.IsConnected ?? false;
         public string? CurrentUserId { get; private set; }
 
@@ -50,6 +51,7 @@ namespace Mattermost
             CurrentUserId = me?.Id;
             var channel = await client.GetChannelAsync(ChannelId);
             ChannelDisplayName = channel.DisplayName ?? channel.Name ?? ChannelId;
+            TeamId = channel.TeamId;
 
             var members = await client.GetChannelMembersAsync(ChannelId);
             lock (_lock)
@@ -157,6 +159,43 @@ namespace Mattermost
             {
                 return null;
             }
+        }
+
+        public async Task<IReadOnlyList<DirectChannelInfo>> GetDirectMessageChannelsAsync(CancellationToken cancellationToken = default)
+        {
+            if (_client == null || string.IsNullOrEmpty(CurrentUserId) || string.IsNullOrEmpty(TeamId))
+                return Array.Empty<DirectChannelInfo>();
+
+            var channels = await _client.GetChannelsForUserAsync(CurrentUserId, TeamId, page: 0, perPage: 200).ConfigureAwait(false);
+            var dmChannels = channels?.Where(c => string.Equals(c.Type, "D", StringComparison.OrdinalIgnoreCase)).ToList() ?? new List<Channel>();
+
+            var result = new List<DirectChannelInfo>(dmChannels.Count);
+            foreach (var ch in dmChannels)
+            {
+                var info = new DirectChannelInfo
+                {
+                    ChannelId = ch.Id,
+                    DisplayName = ch.DisplayName ?? ch.Name ?? ch.Id,
+                    LastPostAt = ch.LastPostAt
+                };
+                try
+                {
+                    var postsResp = await _client.GetChannelPostsAsync(ch.Id, page: 0, perPage: 1).ConfigureAwait(false);
+                    if (postsResp?.Posts != null && postsResp.Posts.Count > 0 && postsResp.Order != null && postsResp.Order.Count > 0)
+                    {
+                        var firstId = postsResp.Order[0];
+                        if (postsResp.Posts.TryGetValue(firstId, out var post) && !string.IsNullOrWhiteSpace(post.Text))
+                            info.LastMessagePreview = post.Text!.Length > 80 ? post.Text.Substring(0, 77) + "..." : post.Text;
+                    }
+                }
+                catch
+                {
+                    // ignore per-DM preview failure
+                }
+                result.Add(info);
+            }
+            result.Sort((a, b) => b.LastPostAt.CompareTo(a.LastPostAt));
+            return result;
         }
 
         private void OnClientMessageReceived(object? sender, MessageEventArgs e)

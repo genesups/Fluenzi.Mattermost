@@ -25,6 +25,25 @@ namespace Mattermost
         }
 
         /// <summary>
+        /// Get channels for a user in a team (includes public channels and direct message channels the user belongs to).
+        /// </summary>
+        /// <param name="userId"> User identifier. </param>
+        /// <param name="teamId"> Team identifier. </param>
+        /// <param name="page"> Page number (0-based). </param>
+        /// <param name="perPage"> Number of channels per page. </param>
+        /// <returns> List of channels (public and DMs) for the user in the team. </returns>
+        public Task<IReadOnlyList<Channel>> GetChannelsForUserAsync(string userId, string teamId, int page = 0, int perPage = 200)
+        {
+            CheckDisposed();
+            if (string.IsNullOrWhiteSpace(userId))
+                throw new ArgumentException("User ID cannot be null or empty.", nameof(userId));
+            if (string.IsNullOrWhiteSpace(teamId))
+                throw new ArgumentException("Team ID cannot be null or empty.", nameof(teamId));
+            string url = Routes.UserTeamChannels(userId, teamId) + "?page=" + page + "&per_page=" + perPage;
+            return SendRequestAsync<IReadOnlyList<Channel>>(HttpMethod.Get, url);
+        }
+
+        /// <summary>
         /// Get public channels for a team.
         /// </summary>
         /// <param name="teamId"> Team identifier. </param>

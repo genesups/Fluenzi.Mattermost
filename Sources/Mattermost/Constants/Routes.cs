@@ -1,4 +1,6 @@
-﻿namespace Mattermost.Constants
+using System;
+
+namespace Mattermost.Constants
 {
     internal static class Routes
     {
@@ -9,6 +11,7 @@
         internal const string Teams = version + "/teams";
         internal const string Files = version + "/files";
         internal const string Channels = version + "/channels";
+        internal static string UserTeamChannels(string userId, string teamId) => version + "/users/" + Uri.EscapeDataString(userId) + "/teams/" + Uri.EscapeDataString(teamId) + "/channels";
         internal const string WebSocket = version + "/websocket";
         internal const string GroupChannels = Channels + "/group";
         internal const string DefaultBaseUrl = "https://community.mattermost.com";

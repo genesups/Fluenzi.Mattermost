@@ -167,6 +167,11 @@ namespace Mattermost
         Task<Channel> GetChannelAsync(string channelId);
 
         /// <summary>
+        /// Get channels for a user in a team (includes public channels and direct message channels).
+        /// </summary>
+        Task<IReadOnlyList<Channel>> GetChannelsForUserAsync(string userId, string teamId, int page = 0, int perPage = 200);
+
+        /// <summary>
         /// Get public channels for a team.
         /// </summary>
         /// <param name="teamId"> Team identifier. </param>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Mattermost.Models.Channels;
 using Mattermost.Models.Posts;
 using Mattermost.Models.Responses;
 
@@ -18,6 +19,9 @@ namespace Mattermost
 
         /// <summary>Channel display name (from server).</summary>
         string ChannelDisplayName { get; }
+
+        /// <summary>Team identifier (set after ConnectAsync, from channel).</summary>
+        string? TeamId { get; }
 
         /// <summary>Whether the underlying client is connected via WebSocket.</summary>
         bool IsConnected { get; }
@@ -48,6 +52,9 @@ namespace Mattermost
 
         /// <summary>Get the profile image for a user (bytes). Returns null if not found or on error.</summary>
         Task<byte[]?> GetUserImageAsync(string userId, CancellationToken cancellationToken = default);
+
+        /// <summary>Get direct message channels for the current user in the session's team (with optional last message preview).</summary>
+        Task<IReadOnlyList<DirectChannelInfo>> GetDirectMessageChannelsAsync(CancellationToken cancellationToken = default);
 
         /// <summary>Get file bytes by identifier (e.g. post attachment).</summary>
         Task<byte[]?> GetFileAsync(string fileId, CancellationToken cancellationToken = default);
