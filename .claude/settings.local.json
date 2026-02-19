@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:api.mattermost.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:developers.mattermost.com)",
+      "Bash(dotnet restore:*)",
+      "Bash(dotnet build:*)"
+    ]
+  }
+}

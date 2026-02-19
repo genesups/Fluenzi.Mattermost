@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Fluenzi.Mattermost.Store</RootNamespace>
+    <AssemblyName>Fluenzi.Mattermost.Store</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Fluenzi.Mattermost.Abstractions\Fluenzi.Mattermost.Abstractions.csproj" />
+    <ProjectReference Include="..\Fluenzi.Mattermost.WebSocket\Fluenzi.Mattermost.WebSocket.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="R3" Version="1.2.9" />
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+    <PackageReference Include="System.Text.Json" Version="9.0.0" />
+  </ItemGroup>
+</Project>
