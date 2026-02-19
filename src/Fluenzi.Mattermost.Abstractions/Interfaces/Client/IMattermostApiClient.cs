@@ -7,6 +7,9 @@ public interface IMattermostApiClient :
     IBotApi, IOAuthApi, ISystemApi,
     IComplianceApi, IDataRetentionApi, IPluginApi, IJobApi,
     ILdapApi, ISamlApi, IElasticsearchApi,
-    IBookmarkApi, IImportExportApi
+    IBookmarkApi, IImportExportApi,
+    ISchemeApi, IClusterApi, IBrandApi, IOpenGraphApi,
+    IBleveApi, IUploadApi, ISharedChannelApi,
+    IIPFilterApi, IOutgoingOAuthApi
 {
 }

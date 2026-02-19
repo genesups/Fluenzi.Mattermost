@@ -203,4 +203,38 @@ public static class ApiRoutes
 
     // WebSocket
     public const string WebSocket = "/api/v4/websocket";
+
+    // Schemes
+    public const string Schemes = "/api/v4/schemes";
+    public const string Scheme = "/api/v4/schemes/{0}";
+    public const string SchemePatch = "/api/v4/schemes/{0}/patch";
+    public const string SchemeChannels = "/api/v4/schemes/{0}/channels";
+
+    // Cluster
+    public const string ClusterStatus = "/api/v4/cluster/status";
+
+    // Brand
+    public const string BrandImage = "/api/v4/brand/image";
+
+    // OpenGraph
+    public const string OpenGraph = "/api/v4/opengraph";
+
+    // Bleve
+    public const string BlevePurge = "/api/v4/bleve/purge_indexes";
+
+    // Uploads
+    public const string Uploads = "/api/v4/uploads";
+    public const string Upload = "/api/v4/uploads/{0}";
+
+    // Shared Channels
+    public const string SharedChannels = "/api/v4/sharedchannels/{0}";
+    public const string SharedChannelRemotes = "/api/v4/sharedchannels/remotes/{0}";
+
+    // IP Filters
+    public const string IPFilters = "/api/v4/ip_filtering";
+    public const string MyIP = "/api/v4/ip_filtering/my_ip";
+
+    // Outgoing OAuth
+    public const string OutgoingOAuthConnections = "/api/v4/oauth/outgoing_connections";
+    public const string OutgoingOAuthConnection = "/api/v4/oauth/outgoing_connections/{0}";
 }

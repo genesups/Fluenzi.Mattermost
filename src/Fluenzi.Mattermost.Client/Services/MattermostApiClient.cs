@@ -49,6 +49,15 @@ public class MattermostApiClient : IMattermostApiClient
     private readonly ElasticsearchApiClient _elasticsearch;
     private readonly BookmarkApiClient _bookmarks;
     private readonly ImportExportApiClient _importExport;
+    private readonly SchemeApiClient _schemes;
+    private readonly ClusterApiClient _cluster;
+    private readonly BrandApiClient _brand;
+    private readonly OpenGraphApiClient _openGraph;
+    private readonly BleveApiClient _bleve;
+    private readonly UploadApiClient _uploads;
+    private readonly SharedChannelApiClient _sharedChannels;
+    private readonly IPFilterApiClient _ipFilter;
+    private readonly OutgoingOAuthApiClient _outgoingOAuth;
 
     public MattermostApiClient(ApiRequestHandler api)
     {
@@ -77,6 +86,15 @@ public class MattermostApiClient : IMattermostApiClient
         _elasticsearch = new ElasticsearchApiClient(api);
         _bookmarks = new BookmarkApiClient(api);
         _importExport = new ImportExportApiClient(api);
+        _schemes = new SchemeApiClient(api);
+        _cluster = new ClusterApiClient(api);
+        _brand = new BrandApiClient(api);
+        _openGraph = new OpenGraphApiClient(api);
+        _bleve = new BleveApiClient(api);
+        _uploads = new UploadApiClient(api);
+        _sharedChannels = new SharedChannelApiClient(api);
+        _ipFilter = new IPFilterApiClient(api);
+        _outgoingOAuth = new OutgoingOAuthApiClient(api);
     }
 
     // IUserApi
@@ -330,4 +348,47 @@ public class MattermostApiClient : IMattermostApiClient
     public Task CreateExportAsync(CancellationToken ct = default) => _importExport.CreateExportAsync(ct);
     public Task<byte[]> DownloadExportAsync(string exportName, CancellationToken ct = default) => _importExport.DownloadExportAsync(exportName, ct);
     public Task DeleteExportAsync(string exportName, CancellationToken ct = default) => _importExport.DeleteExportAsync(exportName, ct);
+
+    // ISchemeApi
+    public Task<Scheme> GetSchemeAsync(string schemeId, CancellationToken ct = default) => _schemes.GetSchemeAsync(schemeId, ct);
+    public Task<PagedResult<Scheme>> GetSchemesAsync(string? scope = null, int page = 0, int perPage = 60, CancellationToken ct = default) => _schemes.GetSchemesAsync(scope, page, perPage, ct);
+    public Task<Scheme> CreateSchemeAsync(Scheme scheme, CancellationToken ct = default) => _schemes.CreateSchemeAsync(scheme, ct);
+    public Task<Scheme> PatchSchemeAsync(string schemeId, Dictionary<string, object> patch, CancellationToken ct = default) => _schemes.PatchSchemeAsync(schemeId, patch, ct);
+    public Task DeleteSchemeAsync(string schemeId, CancellationToken ct = default) => _schemes.DeleteSchemeAsync(schemeId, ct);
+    public Task<PagedResult<Channel>> GetChannelsForSchemeAsync(string schemeId, int page = 0, int perPage = 60, CancellationToken ct = default) => _schemes.GetChannelsForSchemeAsync(schemeId, page, perPage, ct);
+
+    // IClusterApi
+    public Task<IReadOnlyList<ClusterInfo>> GetClusterStatusAsync(CancellationToken ct = default) => _cluster.GetClusterStatusAsync(ct);
+
+    // IBrandApi
+    public Task<byte[]> GetBrandImageAsync(CancellationToken ct = default) => _brand.GetBrandImageAsync(ct);
+    public Task UploadBrandImageAsync(Stream image, CancellationToken ct = default) => _brand.UploadBrandImageAsync(image, ct);
+    public Task DeleteBrandImageAsync(CancellationToken ct = default) => _brand.DeleteBrandImageAsync(ct);
+
+    // IOpenGraphApi
+    public Task<OpenGraphMetadata> GetOpenGraphMetadataAsync(string url, CancellationToken ct = default) => _openGraph.GetOpenGraphMetadataAsync(url, ct);
+
+    // IBleveApi
+    public Task PurgeBleveIndexesAsync(CancellationToken ct = default) => _bleve.PurgeBleveIndexesAsync(ct);
+
+    // IUploadApi
+    public Task<UploadSession> CreateUploadSessionAsync(string channelId, string filename, long fileSize, CancellationToken ct = default) => _uploads.CreateUploadSessionAsync(channelId, filename, fileSize, ct);
+    public Task<UploadSession> GetUploadSessionAsync(string uploadId, CancellationToken ct = default) => _uploads.GetUploadSessionAsync(uploadId, ct);
+    public Task<Models.Files.FileInfo> UploadDataAsync(string uploadId, Stream data, CancellationToken ct = default) => _uploads.UploadDataAsync(uploadId, data, ct);
+
+    // ISharedChannelApi
+    public Task<PagedResult<SharedChannel>> GetSharedChannelsAsync(string teamId, int page = 0, int perPage = 60, CancellationToken ct = default) => _sharedChannels.GetSharedChannelsAsync(teamId, page, perPage, ct);
+    public Task<IReadOnlyList<SharedChannelRemote>> GetSharedChannelRemotesAsync(string channelId, CancellationToken ct = default) => _sharedChannels.GetSharedChannelRemotesAsync(channelId, ct);
+
+    // IIPFilterApi
+    public Task<IPFilterConfig> GetIPFiltersAsync(CancellationToken ct = default) => _ipFilter.GetIPFiltersAsync(ct);
+    public Task<IPFilterConfig> UpdateIPFiltersAsync(IPFilterConfig config, CancellationToken ct = default) => _ipFilter.UpdateIPFiltersAsync(config, ct);
+    public Task<string> GetMyIPAsync(CancellationToken ct = default) => _ipFilter.GetMyIPAsync(ct);
+
+    // IOutgoingOAuthApi
+    public Task<PagedResult<OutgoingOAuthConnection>> GetOutgoingOAuthConnectionsAsync(int page = 0, int perPage = 60, CancellationToken ct = default) => _outgoingOAuth.GetOutgoingOAuthConnectionsAsync(page, perPage, ct);
+    public Task<OutgoingOAuthConnection> GetOutgoingOAuthConnectionAsync(string connectionId, CancellationToken ct = default) => _outgoingOAuth.GetOutgoingOAuthConnectionAsync(connectionId, ct);
+    public Task<OutgoingOAuthConnection> CreateOutgoingOAuthConnectionAsync(OutgoingOAuthConnection connection, CancellationToken ct = default) => _outgoingOAuth.CreateOutgoingOAuthConnectionAsync(connection, ct);
+    public Task<OutgoingOAuthConnection> UpdateOutgoingOAuthConnectionAsync(string connectionId, OutgoingOAuthConnection connection, CancellationToken ct = default) => _outgoingOAuth.UpdateOutgoingOAuthConnectionAsync(connectionId, connection, ct);
+    public Task DeleteOutgoingOAuthConnectionAsync(string connectionId, CancellationToken ct = default) => _outgoingOAuth.DeleteOutgoingOAuthConnectionAsync(connectionId, ct);
 }

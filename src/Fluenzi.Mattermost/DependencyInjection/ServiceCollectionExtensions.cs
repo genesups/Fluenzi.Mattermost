@@ -75,6 +75,15 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IElasticsearchApi>(sp => sp.GetRequiredService<IMattermostApiClient>());
         services.AddSingleton<IBookmarkApi>(sp => sp.GetRequiredService<IMattermostApiClient>());
         services.AddSingleton<IImportExportApi>(sp => sp.GetRequiredService<IMattermostApiClient>());
+        services.AddSingleton<ISchemeApi>(sp => sp.GetRequiredService<IMattermostApiClient>());
+        services.AddSingleton<IClusterApi>(sp => sp.GetRequiredService<IMattermostApiClient>());
+        services.AddSingleton<IBrandApi>(sp => sp.GetRequiredService<IMattermostApiClient>());
+        services.AddSingleton<IOpenGraphApi>(sp => sp.GetRequiredService<IMattermostApiClient>());
+        services.AddSingleton<IBleveApi>(sp => sp.GetRequiredService<IMattermostApiClient>());
+        services.AddSingleton<IUploadApi>(sp => sp.GetRequiredService<IMattermostApiClient>());
+        services.AddSingleton<ISharedChannelApi>(sp => sp.GetRequiredService<IMattermostApiClient>());
+        services.AddSingleton<IIPFilterApi>(sp => sp.GetRequiredService<IMattermostApiClient>());
+        services.AddSingleton<IOutgoingOAuthApi>(sp => sp.GetRequiredService<IMattermostApiClient>());
 
         // WebSocket
         services.AddSingleton<MattermostWebSocketClient>();
