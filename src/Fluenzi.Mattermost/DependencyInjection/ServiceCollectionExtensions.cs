@@ -17,7 +17,7 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services,
         Action<MattermostOptions> configure)
     {
-        var options = new MattermostOptions();
+        var options = new MattermostOptions();        
         configure(options);
 
         services.AddSingleton(options);
@@ -26,7 +26,10 @@ public static class ServiceCollectionExtensions
         // HttpClient
         services.AddHttpClient("FluenziMattermost", client =>
         {
-            client.BaseAddress = new Uri(options.ServerUrl);
+           if (!string.IsNullOrWhiteSpace(options.ServerUrl))
+           {
+               client.BaseAddress = new Uri(options.ServerUrl);
+           }
             client.Timeout = options.DefaultTimeout;
         });
 

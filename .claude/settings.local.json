@@ -6,7 +6,12 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:developers.mattermost.com)",
       "Bash(dotnet restore:*)",
-      "Bash(dotnet build:*)"
+      "Bash(dotnet build:*)",
+      "Bash(dotnet nuget list source:*)",
+      "Read(//c/Program Files/DevExpress 25.1/**)",
+      "Bash(taskkill:*)",
+      "Bash(dotnet add package:*)",
+      "Bash(dotnet add:*)"
     ]
   }
 }
